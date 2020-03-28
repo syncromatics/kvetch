@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package kvetch.api.v1;
+
+option csharp_namespace = "Kvetch.Api.V1";
+option go_package = "apiv1";
+option java_multiple_files = true;
+option java_outer_classname = "SubscriptionProto";
+option java_package = "com.kvetch.api.v1";
+option php_namespace = "Kvetch\\Api\\V1";
+option objc_class_prefix = "KAX";
+
+import "kvetch/api/v1/key_value.proto";
+
+// Subscription is a subscription to the key value store.
+message Subscription {
+  string id = 1;
+  string key = 2;
+  bool is_prefix = 3;
+}
+
+// Subscriptions is a collection of subscriptions.
+message Subscriptions { repeated Subscription requests = 1; }
+
+// SubscriptionUpdate is an update to a key value a subscription is watching.
+message SubscriptionUpdate {
+  string id = 1;
+  KeyValue message = 2;
+}
+
+// CancelSubscription will cancel a subscription.
+message CancelSubscription { string id = 1; }

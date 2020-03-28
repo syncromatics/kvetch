@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package kvetch.api.v1;
+
+option csharp_namespace = "Kvetch.Api.V1";
+option go_package = "apiv1";
+option java_multiple_files = true;
+option java_outer_classname = "PingProto";
+option java_package = "com.kvetch.api.v1";
+option php_namespace = "Kvetch\\Api\\V1";
+option objc_class_prefix = "KAX";
+
+// Ping is a keep alive message for the stream.
+message Ping {}

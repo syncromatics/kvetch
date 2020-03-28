@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package kvetch.api.v1;
+
+option csharp_namespace = "Kvetch.Api.V1";
+option go_package = "apiv1";
+option java_multiple_files = true;
+option java_outer_classname = "ApiProto";
+option java_package = "com.kvetch.api.v1";
+option php_namespace = "Kvetch\\Api\\V1";
+option objc_class_prefix = "KAX";
+
+import "kvetch/api/v1/key_value.proto";
+import "kvetch/api/v1/subscription.proto";
+import "kvetch/api/v1/ping.proto";
+
+// API is the key value broker api.
+service API {
+  // SetValues takes a list of key values and stores them in the datastore and
+  // will notify subscribers of changes.
+  rpc SetValues(SetValuesRequest) returns (SetValuesResponse);
+
+  // GetValues retrieves a list of key values.
+  rpc GetValues(GetValuesRequest) returns (GetValuesResponse);
+
+  // Subscribe will subscribe to a key or prefix and return the current value
+  // and any changes.
+  rpc Subscribe(stream SubscribeRequest) returns (stream SubscribeResponse);
+}
+
+message SetValuesRequest { repeated KeyValue messages = 1; }
+
+message SetValuesResponse {}
+
+message GetValuesRequest { repeated string keys = 1; }
+
+message GetValuesResponse { repeated KeyValue messages = 1; }
+
+message SubscribeRequest {
+  oneof request {
+    Subscriptions request_subscriptions = 1;
+    CancelSubscription request_cancel_subscription = 2;
+    Ping request_ping = 3;
+  }
+}
+
+message SubscribeResponse {
+  oneof response {
+    SubscriptionUpdate response_subscription_update = 1;
+    Ping response_ping = 2;
+  }
+}
