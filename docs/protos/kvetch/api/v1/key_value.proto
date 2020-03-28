@@ -7,7 +7,6 @@ option go_package = "apiv1";
 option java_multiple_files = true;
 option java_outer_classname = "KeyValueProto";
 option java_package = "com.kvetch.api.v1";
-option php_namespace = "Kvetch\\Api\\V1";
 option objc_class_prefix = "KAX";
 
 // KeyValue is a key value object.
