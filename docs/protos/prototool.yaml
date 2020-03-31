@@ -2,6 +2,10 @@ protoc:
   version: 3.8.0
 lint:
   group: uber2
+  rules:
+    remove:
+      - FILE_OPTIONS_REQUIRE_OBJC_CLASS_PREFIX
+      - FILE_OPTIONS_REQUIRE_PHP_NAMESPACE
 generate:
   go_options:
     import_path: github.com/syncromatics/kvetch/internal/proto
@@ -9,4 +13,4 @@ generate:
     - name: go
       type: go
       flags: plugins=grpc
-      output: ../../internal/proto
+      output: /output/internal/protos
