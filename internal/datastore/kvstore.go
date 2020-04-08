@@ -52,7 +52,7 @@ func (s *KVStore) Get(request *apiv1.GetValuesRequest) (*apiv1.GetValuesResponse
 			err = value.Value(func(v []byte) error {
 				response.Messages = append(response.Messages, &apiv1.KeyValue{
 					Key:   string(key.Key),
-					Value: v,
+					Value: append([]byte{}, v...),
 				})
 				return nil
 			})
@@ -157,7 +157,7 @@ func (s *KVStore) prefixScan(txn *badger.Txn, prefixKey string) ([]*apiv1.KeyVal
 		err := item.Value(func(v []byte) error {
 			values = append(values, &apiv1.KeyValue{
 				Key:   string(k),
-				Value: v,
+				Value: append([]byte{}, v...),
 			})
 			return nil
 		})
