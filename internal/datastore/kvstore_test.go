@@ -63,6 +63,64 @@ func Test_GetPrefix(t *testing.T) {
 	})
 }
 
+func Test_Get(t *testing.T) {
+	tmpDir, err := ioutil.TempDir("", "Test_GetPrefix")
+	assert.NilError(t, err)
+
+	store, err := datastore.NewKVStore(tmpDir)
+	assert.NilError(t, err)
+
+	err = store.Set(&apiv1.SetValuesRequest{
+		Messages: []*apiv1.KeyValue{
+			&apiv1.KeyValue{
+				Key:   "test/1/stuff",
+				Value: []byte("value 1"),
+			},
+			&apiv1.KeyValue{
+				Key:   "test/1/stuff2",
+				Value: []byte("value 2 longer"),
+			},
+			&apiv1.KeyValue{
+				Key:   "test/2/stuff",
+				Value: []byte("bad value"),
+			},
+		},
+	})
+	assert.NilError(t, err)
+
+	values, err := store.Get(&apiv1.GetValuesRequest{
+		Requests: []*apiv1.GetValuesRequest_GetValue{
+			&apiv1.GetValuesRequest_GetValue{
+				Key: "test/1/stuff",
+			},
+			&apiv1.GetValuesRequest_GetValue{
+				Key: "test/1/stuff2",
+			},
+			&apiv1.GetValuesRequest_GetValue{
+				Key: "test/2/stuff",
+			},
+		},
+	})
+	assert.NilError(t, err)
+
+	assert.DeepEqual(t, values, &apiv1.GetValuesResponse{
+		Messages: []*apiv1.KeyValue{
+			&apiv1.KeyValue{
+				Key:   "test/1/stuff",
+				Value: []byte("value 1"),
+			},
+			&apiv1.KeyValue{
+				Key:   "test/1/stuff2",
+				Value: []byte("value 2 longer"),
+			},
+			&apiv1.KeyValue{
+				Key:   "test/2/stuff",
+				Value: []byte("bad value"),
+			},
+		},
+	})
+}
+
 func Test_Subscribe(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "Test_GetPrefix")
 	assert.NilError(t, err)
