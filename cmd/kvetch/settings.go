@@ -33,7 +33,7 @@ func getSettingsFromEnv() (*settings, error) {
 	if !ok {
 		prometheusPortInt = 80
 	} else {
-		portInt, err = strconv.Atoi(port)
+		prometheusPortInt, err = strconv.Atoi(port)
 		if err != nil {
 			allErrors = append(allErrors, fmt.Sprintf("failed to convert %s to int", port))
 		}
