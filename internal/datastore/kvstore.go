@@ -147,6 +147,9 @@ func (s *KVStore) Subscribe(ctx context.Context, subscription *apiv1.SubscribeRe
 // GarbageCollect cleans up old values in log files
 func (s *KVStore) GarbageCollect() error {
 	err := s.db.RunValueLogGC(0.5)
+	if err == badger.ErrNoRewrite { // no cleanup happened, this is okay
+		return nil
+	}
 	if err != nil {
 		return errors.Wrap(err, "failed log gc")
 	}
