@@ -5,12 +5,14 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type settings struct {
-	Port           int
-	PrometheusPort int
-	Datastore      string
+	Port                      int
+	PrometheusPort            int
+	Datastore                 string
+	GarbageCollectionInterval time.Duration
 }
 
 func getSettingsFromEnv() (*settings, error) {
@@ -44,13 +46,23 @@ func getSettingsFromEnv() (*settings, error) {
 		allErrors = append(allErrors, "DATASTORE")
 	}
 
+	duration := 5 * time.Minute
+	collection, ok := os.LookupEnv("GARBAGE_COLLECTION_INTERVAL")
+	if ok {
+		duration, err = time.ParseDuration(collection)
+		if err != nil {
+			allErrors = append(allErrors, fmt.Sprintf("GARBAGE_COLLECTION_INTERVAL is not a valid time.Duration '%s'", collection))
+		}
+	}
+
 	if len(allErrors) > 0 {
 		return nil, fmt.Errorf("Missing required environment variables: %s", strings.Join(allErrors, ", "))
 	}
 
 	return &settings{
-		Port:           portInt,
-		PrometheusPort: prometheusPortInt,
-		Datastore:      datastore,
+		Port:                      portInt,
+		PrometheusPort:            prometheusPortInt,
+		Datastore:                 datastore,
+		GarbageCollectionInterval: duration,
 	}, nil
 }

@@ -144,6 +144,16 @@ func (s *KVStore) Subscribe(ctx context.Context, subscription *apiv1.SubscribeRe
 	return nil
 }
 
+// GarbageCollect cleans up old values in log files
+func (s *KVStore) GarbageCollect() error {
+	err := s.db.RunValueLogGC(0.5)
+	if err != nil {
+		return errors.Wrap(err, "failed log gc")
+	}
+
+	return nil
+}
+
 func (s *KVStore) prefixScan(txn *badger.Txn, prefixKey string) ([]*apiv1.KeyValue, error) {
 	values := []*apiv1.KeyValue{}
 
