@@ -72,7 +72,9 @@ func init() {
 	proto.RegisterType((*KeyValue)(nil), "kvetch.api.v1.KeyValue")
 }
 
-func init() { proto.RegisterFile("kvetch/api/v1/key_value.proto", fileDescriptor_da126830bd373ffc) }
+func init() {
+	proto.RegisterFile("kvetch/api/v1/key_value.proto", fileDescriptor_da126830bd373ffc)
+}
 
 var fileDescriptor_da126830bd373ffc = []byte{
 	// 156 bytes of a gzipped FileDescriptorProto

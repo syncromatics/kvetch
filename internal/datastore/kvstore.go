@@ -2,7 +2,9 @@ package datastore
 
 import (
 	"context"
+	"time"
 
+	"github.com/golang/protobuf/ptypes"
 	apiv1 "github.com/syncromatics/kvetch/internal/protos/kvetch/api/v1"
 
 	badger "github.com/dgraph-io/badger/v2"
@@ -74,10 +76,29 @@ func (s *KVStore) Set(request *apiv1.SetValuesRequest) error {
 	wb := s.db.NewWriteBatch()
 	defer wb.Cancel()
 
-	for _, value := range request.Messages {
-		err := wb.Set([]byte(value.Key), []byte(value.Value))
+	if request.TtlDuration != nil {
+		ttl, err := ptypes.Duration(request.TtlDuration)
 		if err != nil {
-			return errors.Wrap(err, "failed to set key")
+			return errors.Wrap(err, "failed to deserialize ttl")
+		}
+		expire := uint64(time.Now().Add(ttl).Unix())
+		for _, value := range request.Messages {
+			entry := &badger.Entry{
+				Key:       []byte(value.Key),
+				Value:     []byte(value.Value),
+				ExpiresAt: expire,
+			}
+			err = wb.SetEntry(entry)
+			if err != nil {
+				return errors.Wrap(err, "failed to set key")
+			}
+		}
+	} else {
+		for _, value := range request.Messages {
+			err := wb.Set([]byte(value.Key), []byte(value.Value))
+			if err != nil {
+				return errors.Wrap(err, "failed to set key")
+			}
 		}
 	}
 
