@@ -10,6 +10,7 @@ option java_package = "com.kvetch.api.v1";
 option objc_class_prefix = "KAX";
 
 import "kvetch/api/v1/key_value.proto";
+import "google/protobuf/duration.proto";
 
 // API is the key value broker api.
 service API {
@@ -25,7 +26,10 @@ service API {
   rpc Subscribe(SubscribeRequest) returns (stream SubscribeResponse);
 }
 
-message SetValuesRequest { repeated KeyValue messages = 1; }
+message SetValuesRequest {
+  repeated KeyValue messages = 1;
+  google.protobuf.Duration ttl_duration = 2;
+}
 
 message SetValuesResponse {}
 
