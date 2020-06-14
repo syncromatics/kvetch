@@ -7,6 +7,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/syncromatics/go-kit/cmd"
 	apiv1 "github.com/syncromatics/kvetch/internal/protos/kvetch/api/v1"
 	"google.golang.org/grpc/codes"
@@ -20,6 +21,7 @@ var (
 		Args:    cobra.MinimumNArgs(1),
 		PreRunE: setupClient,
 		RunE: func(_ *cobra.Command, args []string) error {
+			isPrefix := viper.GetBool("prefix")
 			group := cmd.NewProcessGroup(context.Background())
 			for _, k := range args {
 				key := k

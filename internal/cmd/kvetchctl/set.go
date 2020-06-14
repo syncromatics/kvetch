@@ -13,6 +13,7 @@ import (
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/syncromatics/go-kit/cmd"
 	apiv1 "github.com/syncromatics/kvetch/internal/protos/kvetch/api/v1"
 )
@@ -33,6 +34,7 @@ If neither a key nor value is specified as an argument, the keys and values will
 		RunE: func(_ *cobra.Command, args []string) error {
 			group := cmd.NewProcessGroup(context.Background())
 			group.Go(func() error {
+				ttl := viper.GetDuration("ttl")
 				var ttlDuration *duration.Duration
 				if ttl != 0 {
 					ttlDuration = ptypes.DurationProto(ttl)
@@ -56,6 +58,7 @@ If neither a key nor value is specified as an argument, the keys and values will
 )
 
 func setWithZeroArgs(ctx context.Context, ttlDuration *duration.Duration) error {
+	valueType := viper.GetString("value-type")
 	decoder := json.NewDecoder(os.Stdin)
 	for count := 0; ; count++ {
 		select {
@@ -116,6 +119,7 @@ func setWithZeroArgs(ctx context.Context, ttlDuration *duration.Duration) error 
 }
 
 func setWithOneArg(ctx context.Context, ttlDuration *duration.Duration, key string) error {
+	valueType := viper.GetString("value-type")
 	value, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
 		return errors.Wrap(err, "failed to read value from stdin")
@@ -141,6 +145,7 @@ func setWithOneArg(ctx context.Context, ttlDuration *duration.Duration, key stri
 }
 
 func setWithTwoArgs(ctx context.Context, ttlDuration *duration.Duration, key, valueString string) error {
+	valueType := viper.GetString("value-type")
 	var err error
 	var value []byte
 	switch valueType {
