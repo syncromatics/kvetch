@@ -13,11 +13,11 @@ build: proto-lint
 	docker build --build-arg "BUILD_FLAGS=$(BUILD_FLAGS)" -t package:$(VERSION) --target package .
 
 test: build
-	docker run -v $(PWD)/artifacts:/artifacts -v /var/run/docker.sock:/var/run/docker.sock testing:$(VERSION)
+	docker run --rm -v $(PWD)/artifacts:/artifacts -v /var/run/docker.sock:/var/run/docker.sock testing:$(VERSION)
 	cd artifacts && curl -s https://codecov.io/bash | bash
 
 proto-lint:
-	docker run -v "$(PWD)/docs/protos:/work" uber/prototool:latest prototool lint
+	docker run --rm -v "$(PWD)/docs/protos:/work" uber/prototool:latest prototool lint
 
 package: build
 	docker run --rm -v $$PWD:/data --entrypoint cp package:$(VERSION) -R . /data/artifacts
@@ -28,5 +28,5 @@ ship:
 
 generate: proto-lint
 	mkdir -p internal/protos
-	docker run -v "$(PWD)/docs/protos:/work" -v $(PWD):/output uber/prototool:latest prototool generate
-	go run internal/cobraDocs.go
+	docker run --rm -v "$(PWD)/docs/protos:/work" -v $(PWD):/output uber/prototool:latest prototool generate
+	docker run --rm -v "$(PWD):/work" --workdir /work golang:1.14 go run internal/cobraDocs.go
