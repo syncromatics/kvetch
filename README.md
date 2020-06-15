@@ -24,7 +24,7 @@ More `kvetchctl` documentation is available in [docs/kvetchctl](docs/kvetchctl/k
 
 ## Building
 
-![build](https://github.com/syncromatics/kvetch/workflows/build/badge.svg)
+[![build](https://github.com/syncromatics/kvetch/workflows/build/badge.svg)](https://github.com/syncromatics/kvetch/actions?query=workflow%3Abuild)
 [![Docker Build Status](https://img.shields.io/docker/build/syncromatics/kvetch.svg)](https://hub.docker.com/r/syncromatics/kvetch/)
 
 Building Kvetch requires the following:
