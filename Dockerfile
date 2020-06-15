@@ -1,5 +1,4 @@
 FROM golang:1.14 as build
-ARG BUILD_FLAGS
 WORKDIR /build
 COPY go.mod ./
 COPY go.sum ./
@@ -18,6 +17,7 @@ RUN mkdir -p \
     /artifacts/arm \
     /artifacts/windows \
     /artifacts/darwin
+ARG BUILD_FLAGS
 RUN GOOS=linux GOARCH=amd64 go build -ldflags "$BUILD_FLAGS" -o /artifacts/linux/kvetchctl ./cmd/kvetchctl
 RUN GOOS=linux GOARCH=arm go build -ldflags "$BUILD_FLAGS" -o /artifacts/arm/kvetchctl ./cmd/kvetchctl
 RUN GOOS=darwin GOARCH=amd64 go build -ldflags "$BUILD_FLAGS" -o /artifacts/darwin/kvetchctl ./cmd/kvetchctl
