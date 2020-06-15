@@ -55,3 +55,9 @@ var (
 		},
 	}
 )
+
+func init() {
+	RootCmd.AddCommand(getCmd)
+	getCmd.Flags().BoolP("prefix", "p", false, "Treat the given keys as prefixes")
+	bindCommonFlags(getCmd)
+}

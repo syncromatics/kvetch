@@ -17,11 +17,18 @@ import (
 )
 
 var (
-	log     *zap.SugaredLogger
-	client  apiv1.APIClient
-	rootCmd = &cobra.Command{
-		Use:               "kvetchctl",
-		Short:             "Command line interface for interacting with Kvetch",
+	log    *zap.SugaredLogger
+	client apiv1.APIClient
+	// RootCmd is the root of the command line interface
+	RootCmd = &cobra.Command{
+		Use:   "kvetchctl",
+		Short: "Command line interface for interacting with Kvetch",
+		Long: `All flags may also be specified as environment variables with the prefix KVETCHCTL_
+
+Example:
+export KVETCHCTL_ENDPOINT=localhost:7777
+kvetchctl get some_key
+		`,
 		PersistentPreRunE: setupLogger,
 	}
 )
@@ -29,19 +36,8 @@ var (
 func init() {
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("kvetchctl")
-	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "Enable verbose logging")
-	setupLogger(rootCmd, nil)
-
-	rootCmd.AddCommand(getCmd)
-	getCmd.Flags().BoolP("prefix", "p", false, "Treat the given keys as prefixes")
-	bindCommonFlags(getCmd)
-
-	rootCmd.AddCommand(watchCmd)
-	bindCommonFlags(watchCmd)
-
-	rootCmd.AddCommand(setCmd)
-	setCmd.Flags().Duration("ttl", 0, "Set the time-to-live for each key (optional)")
-	bindCommonFlags(setCmd)
+	RootCmd.PersistentFlags().BoolP("verbose", "v", false, "Enable verbose logging")
+	setupLogger(RootCmd, nil)
 }
 
 func bindCommonFlags(command *cobra.Command) {
@@ -52,7 +48,7 @@ func bindCommonFlags(command *cobra.Command) {
 
 // Execute executes the command line interface
 func Execute() {
-	err := rootCmd.Execute()
+	err := RootCmd.Execute()
 	if err != nil {
 		log.Infow("exited with error", "err", err)
 		os.Exit(1)

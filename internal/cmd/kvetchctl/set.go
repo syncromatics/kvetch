@@ -57,6 +57,12 @@ If neither a key nor value is specified as an argument, the keys and values will
 	}
 )
 
+func init() {
+	RootCmd.AddCommand(setCmd)
+	setCmd.Flags().Duration("ttl", 0, "Set the time-to-live for each key (optional)")
+	bindCommonFlags(setCmd)
+}
+
 func setWithZeroArgs(ctx context.Context, ttlDuration *duration.Duration) error {
 	valueType := viper.GetString("value-type")
 	decoder := json.NewDecoder(os.Stdin)

@@ -28,4 +28,5 @@ ship:
 
 generate: proto-lint
 	mkdir -p internal/protos
-	docker run -v "$(PWD)/docs/protos:/work" -v $(PWD):/output -u `id -u $(USER)`:`id -g $(USER)` uber/prototool:latest prototool generate
+	docker run -v "$(PWD)/docs/protos:/work" -v $(PWD):/output uber/prototool:latest prototool generate
+	go run internal/cobraDocs.go

@@ -32,6 +32,6 @@ var (
 )
 
 func init() {
+	RootCmd.AddCommand(versionCmd)
 	versionCmd.Flags().BoolVarP(&shortened, "short", "s", false, "Use shortened output for version information.")
-	rootCmd.AddCommand(versionCmd)
 }

@@ -54,3 +54,8 @@ var (
 		},
 	}
 )
+
+func init() {
+	RootCmd.AddCommand(watchCmd)
+	bindCommonFlags(watchCmd)
+}
