@@ -1,0 +1,5 @@
+.*
+[Dd]ockerfile
+[Mm]akefile
+artifacts/
+data/
