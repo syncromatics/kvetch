@@ -7,17 +7,30 @@ Kvetch is a small gRPC wrapper around the [Badger](https://github.com/dgraph-io/
 Run the Kvetch container in Docker:
 
 ```bash
-docker run --rm -v $PWD/data:/data -e DATASTORE=/data -p 7777:7777  syncromatics/kvetch:0.4.0
+docker run --rm -v $PWD/data:/data -e DATASTORE=/data -p 7777:7777  syncromatics/kvetch:v0.5.1
 ```
 
 Interact with Kvetch using `kvetchctl`:
 
 ```bash
+GO111MODULE=on go get github.com/syncromatics/kvetch/cmd/kvetchctl@v0.5.1
 export KVETCHCTL_ENDPOINT=localhost:7777 # host:port of Kvetch instance
 kvetchctl set example/1 "first value"
 kvetchctl set example/2 "second value"
 kvetchctl set example/3 "third value"
 kvetchctl get --prefix example/
+```
+
+It is also possible to run both `kvetch` and `kvetchctl` in the same docker container:
+
+```bash
+docker run -it --rm syncromatics/kvetch:v0.5.1 bash
+DATASTORE=/data ./kvetch &
+export KVETCHCTL_ENDPOINT=localhost:7777
+./kvetchctl set example/1 "first value"
+./kvetchctl set example/2 "second value"
+./kvetchctl set example/3 "third value"
+./kvetchctl get --prefix example/
 ```
 
 More `kvetchctl` documentation is available in [docs/kvetchctl](docs/kvetchctl/kvetchctl.md)

@@ -42,5 +42,6 @@ FROM ubuntu:18.04 as final
 ENV GOMAXPROCS 128
 EXPOSE 7777
 WORKDIR /app
+COPY --from=0 /artifacts/linux/kvetchctl /app/
 COPY --from=0 /build/kvetch /app/
 CMD ["/app/kvetch"]
