@@ -18,7 +18,9 @@ type KVStore struct {
 
 // NewKVStore creates a new key value datastore
 func NewKVStore(path string) (*KVStore, error) {
-	db, err := badger.Open(badger.DefaultOptions(path))
+	opts := badger.DefaultOptions(path)
+	opts.WithTruncate(true)
+	db, err := badger.Open(opts)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to open datastore")
 	}
