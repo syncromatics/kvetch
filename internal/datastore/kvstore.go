@@ -19,7 +19,8 @@ type KVStore struct {
 // NewKVStore creates a new key value datastore
 func NewKVStore(path string) (*KVStore, error) {
 	opts := badger.DefaultOptions(path)
-	db, err := badger.Open(opts.WithTruncate(true))
+	db, err := badger.Open(opts.WithTruncate(true).
+		WithMaxTableSize(4194304).WithLevelOneSize(8388608).WithLevelSizeMultiplier(2).WithNumLevelZeroTables(1).WithNumLevelZeroTablesStall(2))
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to open datastore")
 	}
@@ -168,7 +169,7 @@ func (s *KVStore) Subscribe(ctx context.Context, subscription *apiv1.SubscribeRe
 
 // GarbageCollect cleans up old values in log files
 func (s *KVStore) GarbageCollect() error {
-	err := s.db.RunValueLogGC(0.5)
+	err := s.db.RunValueLogGC(0.25)
 	if err == badger.ErrNoRewrite { // no cleanup happened, this is okay
 		return nil
 	}
