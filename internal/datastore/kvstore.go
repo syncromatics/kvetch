@@ -33,11 +33,11 @@ type KVStore struct {
 func getBadgerOptions(path string, options *KVStoreOptions) badger.Options {
 	opts := badger.DefaultOptions(path)
 	if options.EnableTruncate != nil {
-		fmt.Printf("Configuring with enableTruncate: %t \n", options.EnableTruncate.Value)
+		fmt.Printf("Configuring with EnableTruncate: %t \n", options.EnableTruncate.Value)
 		opts = opts.WithTruncate(options.EnableTruncate.Value)
 	}
 	if options.MaxTableSize != nil {
-		fmt.Printf("Configuring with maxTableSize: %d \n", options.MaxTableSize.Value)
+		fmt.Printf("Configuring with MaxTableSize: %d \n", options.MaxTableSize.Value)
 		opts = opts.WithMaxTableSize(options.MaxTableSize.Value)
 	}
 	if options.LevelOneSize != nil {
@@ -64,7 +64,7 @@ func getBadgerOptions(path string, options *KVStoreOptions) badger.Options {
 func NewKVStore(path string, options *KVStoreOptions) (*KVStore, error) {
 	garbageCollectionDiscardRatio := 0.5
 	if options.GarbageCollectionDiscardRatio != nil {
-		fmt.Printf("Configuring with garbageCollectionDiscardRatio: %f \n", options.GarbageCollectionDiscardRatio.Value)
+		fmt.Printf("Configuring with GarbageCollectionDiscardRatio: %f \n", options.GarbageCollectionDiscardRatio.Value)
 		garbageCollectionDiscardRatio = float64(options.GarbageCollectionDiscardRatio.Value)
 	}
 
