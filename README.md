@@ -41,12 +41,12 @@ Configuration is done via environmental variables. Refer to the tables below.
 
 **General Settings**
 
-| Name                        | Type     | Description                                              | Required | Default |
-| --------------------------- | -------- | -------------------------------------------------------- | -------- | ------- |
-| DATASTORE                   | string   | Directory where badger key data will be stored in.       | Yes      | `nil`   |
-| GARBAGE_COLLECTION_INTERVAL | duration | Defines how often kvetch will attempt garbage collection | No       | 5m      |
-| PORT                        | int      | Port on which kvetch grpc service will run.              | No       | 7777    |
-| PROMETHEUS_PORT             |          | Port for use by Prometheus for metric gathering.         | No       | 80      |
+| Name                        | Type     | Description                                               | Required | Default |
+| --------------------------- | -------- | --------------------------------------------------------- | -------- | ------- |
+| DATASTORE                   | string   | Directory where badger key data will be stored in.        | Yes      | `nil`   |
+| GARBAGE_COLLECTION_INTERVAL | duration | Defines how often kvetch will attempt garbage collection. | No       | 5m      |
+| PORT                        | int      | Port on which kvetch grpc service will run.               | No       | 7777    |
+| PROMETHEUS_PORT             | int      | Port for use by Prometheus for metric gathering.          | No       | 80      |
 
 **Optional BadgerDB Specific Settings** (More Detail @ https://github.com/dgraph-io/badger/blob/master/options.go)
 
