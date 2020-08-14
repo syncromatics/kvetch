@@ -19,7 +19,7 @@ func Test_GetPrefix(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "Test_GetPrefix")
 	assert.NilError(t, err)
 
-	store, err := datastore.NewKVStore(tmpDir)
+	store, err := datastore.NewKVStore(tmpDir, &datastore.KVStoreOptions{})
 	assert.NilError(t, err)
 
 	err = store.Set(&apiv1.SetValuesRequest{
@@ -68,7 +68,7 @@ func Test_Get(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "Test_GetPrefix")
 	assert.NilError(t, err)
 
-	store, err := datastore.NewKVStore(tmpDir)
+	store, err := datastore.NewKVStore(tmpDir, &datastore.KVStoreOptions{})
 	assert.NilError(t, err)
 
 	err = store.Set(&apiv1.SetValuesRequest{
@@ -126,7 +126,7 @@ func Test_TTL(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "Test_GetPrefix")
 	assert.NilError(t, err)
 
-	store, err := datastore.NewKVStore(tmpDir)
+	store, err := datastore.NewKVStore(tmpDir, &datastore.KVStoreOptions{})
 	assert.NilError(t, err)
 
 	ttl := 2 * time.Second
@@ -203,7 +203,7 @@ func Test_Subscribe(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "Test_GetPrefix")
 	assert.NilError(t, err)
 
-	store, err := datastore.NewKVStore(tmpDir)
+	store, err := datastore.NewKVStore(tmpDir, &datastore.KVStoreOptions{})
 	assert.NilError(t, err)
 
 	values := []*apiv1.KeyValue{}

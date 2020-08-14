@@ -2,28 +2,80 @@ package datastore
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/wrappers"
 	apiv1 "github.com/syncromatics/kvetch/internal/protos/kvetch/api/v1"
 
 	badger "github.com/dgraph-io/badger/v2"
 	"github.com/pkg/errors"
 )
 
+//KVStoreOptions represent environment variable configurable options related to the KV Store.
+type KVStoreOptions struct {
+	EnableTruncate                              *wrappers.BoolValue
+	MaxTableSize                                *wrappers.Int64Value
+	LevelOneSize                                *wrappers.Int64Value
+	LevelSizeMultiplier                         *wrappers.Int32Value
+	NumberOfLevelZeroTables                     *wrappers.Int32Value
+	NumberOfLevelZeroTablesUntilForceCompaction *wrappers.Int32Value
+	GarbageCollectionDiscardRatio               *wrappers.FloatValue
+}
+
 // KVStore is the key value datastore
 type KVStore struct {
-	db *badger.DB
+	db                            *badger.DB
+	garbageCollectionDiscardRatio float64
+}
+
+func getBadgerOptions(path string, options *KVStoreOptions) badger.Options {
+	opts := badger.DefaultOptions(path)
+	if options.EnableTruncate != nil {
+		fmt.Printf("Configuring with EnableTruncate: %t \n", options.EnableTruncate.Value)
+		opts = opts.WithTruncate(options.EnableTruncate.Value)
+	}
+	if options.MaxTableSize != nil {
+		fmt.Printf("Configuring with MaxTableSize: %d \n", options.MaxTableSize.Value)
+		opts = opts.WithMaxTableSize(options.MaxTableSize.Value)
+	}
+	if options.LevelOneSize != nil {
+		fmt.Printf("Configuring with LevelOneSize: %d \n", options.LevelOneSize.Value)
+		opts = opts.WithLevelOneSize(options.LevelOneSize.Value)
+	}
+	if options.LevelSizeMultiplier != nil {
+		fmt.Printf("Configuring with LevelSizeMultiplier: %d \n", options.LevelSizeMultiplier.Value)
+		opts = opts.WithLevelSizeMultiplier(int(options.LevelSizeMultiplier.Value))
+	}
+	if options.NumberOfLevelZeroTables != nil {
+		fmt.Printf("Configuring with NumberOfLevelZeroTables: %d \n", options.NumberOfLevelZeroTables.Value)
+		opts = opts.WithNumLevelZeroTables(int(options.NumberOfLevelZeroTables.Value))
+	}
+	if options.NumberOfLevelZeroTablesUntilForceCompaction != nil {
+		fmt.Printf("Configuring with NumberOfLevelZeroTablesUntilForceCompaction: %d \n", options.NumberOfLevelZeroTablesUntilForceCompaction.Value)
+		opts = opts.WithNumLevelZeroTablesStall(int(options.NumberOfLevelZeroTablesUntilForceCompaction.Value))
+	}
+
+	return opts
 }
 
 // NewKVStore creates a new key value datastore
-func NewKVStore(path string) (*KVStore, error) {
-	db, err := badger.Open(badger.DefaultOptions(path))
+func NewKVStore(path string, options *KVStoreOptions) (*KVStore, error) {
+	garbageCollectionDiscardRatio := 0.5
+	if options.GarbageCollectionDiscardRatio != nil {
+		fmt.Printf("Configuring with GarbageCollectionDiscardRatio: %f \n", options.GarbageCollectionDiscardRatio.Value)
+		garbageCollectionDiscardRatio = float64(options.GarbageCollectionDiscardRatio.Value)
+	}
+
+	opts := getBadgerOptions(path, options)
+	db, err := badger.Open(opts)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to open datastore")
 	}
 	return &KVStore{
 		db,
+		garbageCollectionDiscardRatio,
 	}, nil
 }
 
@@ -167,7 +219,7 @@ func (s *KVStore) Subscribe(ctx context.Context, subscription *apiv1.SubscribeRe
 
 // GarbageCollect cleans up old values in log files
 func (s *KVStore) GarbageCollect() error {
-	err := s.db.RunValueLogGC(0.5)
+	err := s.db.RunValueLogGC(s.garbageCollectionDiscardRatio)
 	if err == badger.ErrNoRewrite { // no cleanup happened, this is okay
 		return nil
 	}

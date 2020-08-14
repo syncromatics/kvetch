@@ -22,7 +22,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	kvstore, err := datastore.NewKVStore(settings.Datastore)
+	kvstore, err := datastore.NewKVStore(settings.Datastore, settings.KVStoreOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
