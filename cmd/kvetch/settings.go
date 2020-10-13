@@ -130,8 +130,13 @@ func getSettingsFromEnv() (*settings, error) {
 		}
 	}
 
+	kvStoreOptions, err := getKVStoreOptions()
+	if err != nil {
+		allErrors = append(allErrors, err.Error())
+	}
+
 	datastore, ok := os.LookupEnv("DATASTORE")
-	if !ok {
+	if !ok && !kvStoreOptions.InMemory.Value {
 		allErrors = append(allErrors, "DATASTORE")
 	}
 
@@ -142,11 +147,6 @@ func getSettingsFromEnv() (*settings, error) {
 		if err != nil {
 			allErrors = append(allErrors, fmt.Sprintf("GARBAGE_COLLECTION_INTERVAL is not a valid time.Duration '%s'", collection))
 		}
-	}
-
-	kvStoreOptions, err := getKVStoreOptions()
-	if err != nil {
-		allErrors = append(allErrors, err.Error())
 	}
 
 	if len(allErrors) > 0 {
