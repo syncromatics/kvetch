@@ -22,6 +22,15 @@ type settings struct {
 func getKVStoreOptions() (*kvstore.KVStoreOptions, error) {
 	allErrors := []string{}
 	kvStoreOptions := &kvstore.KVStoreOptions{}
+	inMemoryString, ok := os.LookupEnv("IN_MEMORY")
+	if ok {
+		inMemory, err := strconv.ParseBool(inMemoryString)
+		if err != nil {
+			allErrors = append(allErrors, fmt.Sprintf("IN_MEMORY is not a valid bool '%s'", inMemoryString))
+		} else {
+			kvStoreOptions.InMemory = &wrappers.BoolValue{Value: inMemory}
+		}
+	}
 	enableTruncateString, ok := os.LookupEnv("ENABLE_TRUNCATE")
 	if ok {
 		enableTruncate, err := strconv.ParseBool(enableTruncateString)
