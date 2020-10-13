@@ -30,6 +30,8 @@ func getKVStoreOptions() (*kvstore.KVStoreOptions, error) {
 		} else {
 			kvStoreOptions.InMemory = &wrappers.BoolValue{Value: inMemory}
 		}
+	} else {
+		kvStoreOptions.InMemory = &wrappers.BoolValue{Value: false}
 	}
 	enableTruncateString, ok := os.LookupEnv("ENABLE_TRUNCATE")
 	if ok {
