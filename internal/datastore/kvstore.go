@@ -183,8 +183,6 @@ func (s *KVStore) Subscribe(ctx context.Context, subscription *apiv1.SubscribeRe
 			if err != nil {
 				return errors.Wrap(err, "failed callback")
 			}
-
-			return nil
 		}
 		return nil
 	})
