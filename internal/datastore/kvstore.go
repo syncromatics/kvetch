@@ -22,6 +22,7 @@ type KVStoreOptions struct {
 	NumberOfLevelZeroTables                     *wrappers.Int32Value
 	NumberOfLevelZeroTablesUntilForceCompaction *wrappers.Int32Value
 	GarbageCollectionDiscardRatio               *wrappers.FloatValue
+	InMemory                                    *wrappers.BoolValue
 }
 
 // KVStore is the key value datastore
@@ -32,6 +33,10 @@ type KVStore struct {
 
 func getBadgerOptions(path string, options *KVStoreOptions) badger.Options {
 	opts := badger.DefaultOptions(path)
+	if options.InMemory != nil {
+		fmt.Printf("Configuring with InMemory: %t \n", options.InMemory.Value)
+		opts = opts.WithInMemory(options.InMemory.Value)
+	}
 	if options.EnableTruncate != nil {
 		fmt.Printf("Configuring with EnableTruncate: %t \n", options.EnableTruncate.Value)
 		opts = opts.WithTruncate(options.EnableTruncate.Value)

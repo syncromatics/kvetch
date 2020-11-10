@@ -35,14 +35,16 @@ func main() {
 
 	apiv1.RegisterAPIServer(server, service)
 
-	garbageCollector := services.NewGarbageCollectorService(kvstore, settings.GarbageCollectionInterval)
-
 	ctx, cancel := context.WithCancel(context.Background())
 	group, ctx := errgroup.WithContext(ctx)
 
 	group.Go(grpc.HostServer(ctx, server, settings.Port))
 	group.Go(grpc.HostMetrics(ctx, settings.PrometheusPort))
-	group.Go(garbageCollector.Run(ctx))
+
+	if !settings.KVStoreOptions.InMemory.GetValue() {
+		garbageCollector := services.NewGarbageCollectorService(kvstore, settings.GarbageCollectionInterval)
+		group.Go(garbageCollector.Run(ctx))
+	}
 
 	eventChan := make(chan os.Signal)
 	signal.Notify(eventChan, syscall.SIGINT, syscall.SIGTERM)
