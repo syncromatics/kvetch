@@ -56,6 +56,7 @@ Default values here are set to BadgerDB defaults and subject to change if packag
 | -------------------------------------------------- | ----- | ------------------------------------------------------------ | ------- |
 | ENABLE_TRUNCATE                                    | bool  | Truncate indicates whether value log files should be truncated to delete corrupt data, if any. | False   |
 | GARBAGE_COLLECTION_DISCARD_RATIO                   | float | Percentage of value log file that has to be expired or ready for garbage collection for that file to be eligible for garbage collection. | 0.5     |
+| IN_MEMORY                                          | bool  | Sets InMemory mode to true. Everything is stored in memory. No value/sst files on disk are created. In case of a crash all data will be lost. | False   |
 | LEVEL_ONE_SIZE                                     | int   | The maximum total size in bytes for Level 1 in the LSM.      | 20MB    |
 | LEVEL_SIZE_MULTIPLIER                              | int   | Sets the ratio between the maximum sizes of contiguous levels in the LSM. Once a level grows to be larger than this ratio allowed, the compaction process will be triggered. | 10      |
 | MAX_TABLE_SIZE                                     | int   | Sets the maximum size in bytes for each LSM table or file.   | 64MB    |

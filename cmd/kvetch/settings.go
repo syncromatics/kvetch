@@ -22,6 +22,17 @@ type settings struct {
 func getKVStoreOptions() (*kvstore.KVStoreOptions, error) {
 	allErrors := []string{}
 	kvStoreOptions := &kvstore.KVStoreOptions{}
+	inMemoryString, ok := os.LookupEnv("IN_MEMORY")
+	if ok {
+		inMemory, err := strconv.ParseBool(inMemoryString)
+		if err != nil {
+			allErrors = append(allErrors, fmt.Sprintf("IN_MEMORY is not a valid bool '%s'", inMemoryString))
+		} else {
+			kvStoreOptions.InMemory = &wrappers.BoolValue{Value: inMemory}
+		}
+	} else {
+		kvStoreOptions.InMemory = &wrappers.BoolValue{Value: false}
+	}
 	enableTruncateString, ok := os.LookupEnv("ENABLE_TRUNCATE")
 	if ok {
 		enableTruncate, err := strconv.ParseBool(enableTruncateString)
@@ -119,8 +130,13 @@ func getSettingsFromEnv() (*settings, error) {
 		}
 	}
 
+	kvStoreOptions, err := getKVStoreOptions()
+	if err != nil {
+		allErrors = append(allErrors, err.Error())
+	}
+
 	datastore, ok := os.LookupEnv("DATASTORE")
-	if !ok {
+	if !ok && !kvStoreOptions.InMemory.Value {
 		allErrors = append(allErrors, "DATASTORE")
 	}
 
@@ -131,11 +147,6 @@ func getSettingsFromEnv() (*settings, error) {
 		if err != nil {
 			allErrors = append(allErrors, fmt.Sprintf("GARBAGE_COLLECTION_INTERVAL is not a valid time.Duration '%s'", collection))
 		}
-	}
-
-	kvStoreOptions, err := getKVStoreOptions()
-	if err != nil {
-		allErrors = append(allErrors, err.Error())
 	}
 
 	if len(allErrors) > 0 {
