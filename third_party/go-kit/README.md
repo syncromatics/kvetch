@@ -1,0 +1,1 @@
+Narrow source fork of github.com/syncromatics/go-kit v1.5.1. The grpc package is kept here so Kvetch can pass its configured log level to CreateServer. Keep this package synchronized with upstream when updating the dependency.

@@ -31,6 +31,7 @@ func main() {
 
 	server := grpc.CreateServer(&grpc.Settings{
 		ServerName: "kvetch",
+		LogLevel:   settings.LogLevel,
 	})
 
 	apiv1.RegisterAPIServer(server, service)

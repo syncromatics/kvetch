@@ -15,3 +15,5 @@ require (
 	google.golang.org/grpc v1.32.0
 	gotest.tools v2.2.0+incompatible
 )
+
+replace github.com/syncromatics/go-kit => ./third_party/go-kit
