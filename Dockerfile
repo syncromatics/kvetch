@@ -4,7 +4,7 @@ COPY go.mod ./
 COPY go.sum ./
 COPY third_party/go-kit ./third_party/go-kit
 RUN go mod download
-RUN go get -u golang.org/x/lint/golint
+RUN go get golang.org/x/lint/golint@v0.0.0-20190930215403-16217165b5de
 COPY . ./
 RUN go vet ./...
 RUN golint -set_exit_status ./...
