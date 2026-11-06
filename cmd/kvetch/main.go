@@ -12,7 +12,7 @@ import (
 	apiv1 "github.com/syncromatics/kvetch/internal/protos/kvetch/api/v1"
 	services "github.com/syncromatics/kvetch/internal/sevices"
 
-	"github.com/syncromatics/go-kit/grpc"
+	"github.com/syncromatics/go-kit/v2/grpc"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -30,7 +30,9 @@ func main() {
 	service := services.NewAPIService(kvstore)
 
 	server := grpc.CreateServer(&grpc.Settings{
-		ServerName: "kvetch",
+		ServerName:         "kvetch",
+		LogLevel:           settings.LogLevel,
+		DisableStacktrace: true,
 	})
 
 	apiv1.RegisterAPIServer(server, service)

@@ -7,7 +7,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"github.com/syncromatics/go-kit/cmd"
+	"github.com/syncromatics/go-kit/v2/cmd"
 	apiv1 "github.com/syncromatics/kvetch/internal/protos/kvetch/api/v1"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
