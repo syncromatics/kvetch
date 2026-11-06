@@ -8,7 +8,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.7.1
-	github.com/syncromatics/go-kit v1.5.2-0.20261106021418-840c3dd9474b
+	github.com/syncromatics/go-kit/v2 v2.4.1-0.20261106023019-a59bfb5301c2
 	go.hein.dev/go-version v0.1.0
 	go.uber.org/zap v1.16.0
 	golang.org/x/sync v0.0.0-20201008141435-b3e1573b7520
