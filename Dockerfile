@@ -2,7 +2,6 @@ FROM golang:1.14 as build
 WORKDIR /build
 COPY go.mod ./
 COPY go.sum ./
-COPY third_party/go-kit ./third_party/go-kit
 RUN go mod download
 RUN go get golang.org/x/lint/golint@v0.0.0-20190930215403-16217165b5de
 COPY . ./

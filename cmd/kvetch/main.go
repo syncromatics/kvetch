@@ -30,8 +30,9 @@ func main() {
 	service := services.NewAPIService(kvstore)
 
 	server := grpc.CreateServer(&grpc.Settings{
-		ServerName: "kvetch",
-		LogLevel:   settings.LogLevel,
+		ServerName:         "kvetch",
+		LogLevel:           settings.LogLevel,
+		DisableStacktrace: true,
 	})
 
 	apiv1.RegisterAPIServer(server, service)

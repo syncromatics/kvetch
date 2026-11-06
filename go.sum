@@ -351,6 +351,8 @@ github.com/syncromatics/go-kit v0.0.0-20200305194702-2fecb41a0d86 h1:ldG6lypeCn9
 github.com/syncromatics/go-kit v0.0.0-20200305194702-2fecb41a0d86/go.mod h1:GjCGFnW5yVxyhZeg4B0WMytk/K07ikCCwg9UbSa5Yhs=
 github.com/syncromatics/go-kit v1.5.1 h1:F7P7/pNUz41kWcziNwDvDOaew3BA1JBRVCxI7PCSuu4=
 github.com/syncromatics/go-kit v1.5.1/go.mod h1:PDoSJrfEBgI2xKVmvTxnjfF28DpiTrN5srcSvg5hyQY=
+github.com/syncromatics/go-kit v1.5.2-0.20261106020022-8f98bd548165 h1:+s6Ht1Z89iLCzM1Tc+7s4/PfRk7mMv9ZHHzYAe/8Alk=
+github.com/syncromatics/go-kit v1.5.2-0.20261106020022-8f98bd548165/go.mod h1:PDoSJrfEBgI2xKVmvTxnjfF28DpiTrN5srcSvg5hyQY=
 github.com/syncromatics/proto-schema-registry v0.7.2/go.mod h1:w+0RMnAXC0TAbdrRx2fkN9bB1qnKY2FmNBL+5NFunSA=
 github.com/tidwall/pretty v0.0.0-20180105212114-65a9db5fad51/go.mod h1:XNkn88O1ChpSDQmQeStsy+sBenx6DDtFZJxhVysOjyk=
 github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5/go.mod h1:ncp9v5uamzpCO7NfCPTXjqaC+bZgJeR0sMTm6dMHP7U=
