@@ -10,7 +10,7 @@ jobs:
       - name: Prepare repository
         run: git checkout "${GITHUB_REF:11}"
 
-      - uses: syncromatics/gogitver-action@v0.0.3
+      - uses: syncromatics/gogitver-action@867e2a6339153dff938bc34faf745637c92f9c36
         id: gogitver
 
       - name: test
@@ -32,7 +32,7 @@ jobs:
       - name: Prepare repository
         run: git checkout "${GITHUB_REF:11}"
 
-      - uses: syncromatics/gogitver-action@v0.0.3
+      - uses: syncromatics/gogitver-action@867e2a6339153dff938bc34faf745637c92f9c36
         id: gogitver
 
       - name: Create Release
@@ -104,7 +104,7 @@ jobs:
       - name: Prepare repository
         run: git checkout "${GITHUB_REF:11}"
 
-      - uses: syncromatics/gogitver-action@v0.0.3
+      - uses: syncromatics/gogitver-action@867e2a6339153dff938bc34faf745637c92f9c36
         id: gogitver
 
       - name: Create Release

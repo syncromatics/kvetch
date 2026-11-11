@@ -6,6 +6,8 @@ import (
 	apiv1 "github.com/syncromatics/kvetch/internal/protos/kvetch/api/v1"
 
 	"github.com/pkg/errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // Datastore is the key value datastore.
@@ -51,6 +53,14 @@ func (s *APIService) SetValues(ctx context.Context, request *apiv1.SetValuesRequ
 func (s *APIService) Subscribe(request *apiv1.SubscribeRequest, stream apiv1.API_SubscribeServer) error {
 	err := s.datastore.Subscribe(stream.Context(), request, stream.Send)
 	if err != nil {
+		// A client going away can surface as ctx.Err() or as a failed Send, so
+		// check the stream context rather than the shape of the returned error.
+		switch stream.Context().Err() {
+		case context.Canceled:
+			return status.Error(codes.Canceled, context.Canceled.Error())
+		case context.DeadlineExceeded:
+			return status.Error(codes.DeadlineExceeded, context.DeadlineExceeded.Error())
+		}
 		return errors.Wrap(err, "failed to subscribe")
 	}
 	return nil

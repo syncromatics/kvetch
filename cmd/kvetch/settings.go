@@ -16,6 +16,7 @@ type settings struct {
 	PrometheusPort            int
 	Datastore                 string
 	GarbageCollectionInterval time.Duration
+	LogLevel                  string
 	KVStoreOptions            *kvstore.KVStoreOptions
 }
 
@@ -108,6 +109,20 @@ func getSettingsFromEnv() (*settings, error) {
 	allErrors := []string{}
 	var err error
 
+	logLevel := "warn"
+	if level, ok := os.LookupEnv("KVETCH_LOG_LEVEL"); ok {
+		level = strings.ToLower(strings.TrimSpace(level))
+		if level == "warning" {
+			level = "warn"
+		}
+		switch level {
+		case "debug", "info", "warn", "error":
+			logLevel = level
+		default:
+			allErrors = append(allErrors, fmt.Sprintf("KVETCH_LOG_LEVEL must be debug, info, warn, warning, or error; got %q", level))
+		}
+	}
+
 	portInt := 0
 	port, ok := os.LookupEnv("PORT")
 	if !ok {
@@ -158,6 +173,7 @@ func getSettingsFromEnv() (*settings, error) {
 		PrometheusPort:            prometheusPortInt,
 		Datastore:                 datastore,
 		GarbageCollectionInterval: duration,
+		LogLevel:                  logLevel,
 		KVStoreOptions:            kvStoreOptions,
 	}, nil
 }

@@ -45,6 +45,7 @@ Configuration is done via environmental variables. Refer to the tables below.
 | --------------------------- | -------- | --------------------------------------------------------- | -------- | ------- |
 | DATASTORE                   | string   | Directory where badger key data will be stored in.        | Yes      | `nil`   |
 | GARBAGE_COLLECTION_INTERVAL | duration | Defines how often kvetch will attempt garbage collection. | No       | 5m      |
+| KVETCH_LOG_LEVEL            | string   | Minimum gRPC log level: `debug`, `info`, `warn`/`warning`, or `error`. | No | `warn` |
 | PORT                        | int      | Port on which kvetch grpc service will run.               | No       | 7777    |
 | PROMETHEUS_PORT             | int      | Port for use by Prometheus for metric gathering.          | No       | 80      |
 
