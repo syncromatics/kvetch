@@ -53,8 +53,13 @@ func (s *APIService) SetValues(ctx context.Context, request *apiv1.SetValuesRequ
 func (s *APIService) Subscribe(request *apiv1.SubscribeRequest, stream apiv1.API_SubscribeServer) error {
 	err := s.datastore.Subscribe(stream.Context(), request, stream.Send)
 	if err != nil {
-		if errors.Cause(err) == context.Canceled {
+		// A client going away can surface as ctx.Err() or as a failed Send, so
+		// check the stream context rather than the shape of the returned error.
+		switch stream.Context().Err() {
+		case context.Canceled:
 			return status.Error(codes.Canceled, context.Canceled.Error())
+		case context.DeadlineExceeded:
+			return status.Error(codes.DeadlineExceeded, context.DeadlineExceeded.Error())
 		}
 		return errors.Wrap(err, "failed to subscribe")
 	}

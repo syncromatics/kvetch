@@ -30,8 +30,8 @@ func main() {
 	service := services.NewAPIService(kvstore)
 
 	server := grpc.CreateServer(&grpc.Settings{
-		ServerName:         "kvetch",
-		LogLevel:           settings.LogLevel,
+		ServerName:        "kvetch",
+		LogLevel:          settings.LogLevel,
 		DisableStacktrace: true,
 	})
 
@@ -48,7 +48,7 @@ func main() {
 		group.Go(garbageCollector.Run(ctx))
 	}
 
-	eventChan := make(chan os.Signal)
+	eventChan := make(chan os.Signal, 1)
 	signal.Notify(eventChan, syscall.SIGINT, syscall.SIGTERM)
 
 	fmt.Println("kvetch started...")
