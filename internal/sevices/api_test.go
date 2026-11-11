@@ -34,6 +34,7 @@ type fakeSubscribeServer struct {
 	grpc.ServerStream
 	ctx     context.Context
 	sendErr error
+	onSend  func()
 }
 
 func (s *fakeSubscribeServer) Context() context.Context {
@@ -41,6 +42,9 @@ func (s *fakeSubscribeServer) Context() context.Context {
 }
 
 func (s *fakeSubscribeServer) Send(*apiv1.SubscribeResponse) error {
+	if s.onSend != nil {
+		s.onSend()
+	}
 	return s.sendErr
 }
 
@@ -60,7 +64,6 @@ func Test_Subscribe_ContextCanceled(t *testing.T) {
 
 func Test_Subscribe_SendFailsAfterCancel(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
-	cancel()
 
 	service := services.NewAPIService(&fakeDatastore{
 		subscribe: func(ctx context.Context, cb func(*apiv1.SubscribeResponse) error) error {
@@ -70,6 +73,7 @@ func Test_Subscribe_SendFailsAfterCancel(t *testing.T) {
 
 	err := service.Subscribe(&apiv1.SubscribeRequest{}, &fakeSubscribeServer{
 		ctx:     ctx,
+		onSend:  cancel,
 		sendErr: status.Error(codes.Canceled, "context canceled"),
 	})
 	assert.Equal(t, status.Code(err), codes.Canceled)
