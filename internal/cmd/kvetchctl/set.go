@@ -14,7 +14,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/syncromatics/go-kit/cmd"
+	"github.com/syncromatics/go-kit/v2/cmd"
 	apiv1 "github.com/syncromatics/kvetch/internal/protos/kvetch/api/v1"
 )
 

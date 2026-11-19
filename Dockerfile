@@ -3,7 +3,7 @@ WORKDIR /build
 COPY go.mod ./
 COPY go.sum ./
 RUN go mod download
-RUN go get -u golang.org/x/lint/golint
+RUN go get golang.org/x/lint/golint@v0.0.0-20190930215403-16217165b5de
 COPY . ./
 RUN go vet ./...
 RUN golint -set_exit_status ./...
@@ -28,8 +28,9 @@ FROM build as test
 CMD go test -race -coverprofile=/artifacts/coverage.txt -covermode=atomic ./...
 
 # Package binaries for release
-FROM build AS package
-RUN apt-get -y update && apt-get -y install zip
+FROM ubuntu:24.04 AS package
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends zip && rm -rf /var/lib/apt/lists/*
+COPY --from=build /artifacts /artifacts
 WORKDIR /artifacts
 RUN cd linux && tar zcf /artifacts/linux.tar.gz kvetchctl
 RUN cd arm && tar zcf /artifacts/arm.tar.gz kvetchctl
